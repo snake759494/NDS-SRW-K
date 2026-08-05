@@ -20,6 +20,8 @@
 
 완성된 한글 패치: **[`patch/SRWK-Korean-v1.17.xdelta`](patch/SRWK-Korean-v1.17.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
 
+> 📖 **적용 방법은 [docs/PATCHING.md](docs/PATCHING.md)** · 직접 빌드·번역 수정은 **[docs/BUILD.md](docs/BUILD.md)**
+
 1. xdelta 적용 도구(xdelta UI, Delta Patcher 등) 또는 명령줄:
    ```
    xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.17.xdelta "Super Robot Wars K (Korean).nds"
@@ -149,44 +151,64 @@ ECD header:  f1=BE32[4:8]=8 preamble, f2=BE32[8:12]=compressed size, f3=BE32[12:
 ## 저장소 구조
 
 ```
-tools/
-  srwk_rom.py        ROM / add0X 아카이브 처리
-  srwk_codec.py      KS X 1001 완성형 ↔ SJIS 매핑, Add03 컨테이너
-  srwk_native.py     시나리오 대사 코덱 (디코드/인코드/코드북 재생성)
-  srwk_battle.py     전투 대사 코덱
-  srk_lzss.py        ECD/IMG LZSS (참고; 4th 코덱은 _codec1024 사용)
-  srk_gfx.py         Nitro(NCGR/NCLR/NSCR) 그래픽 도구
-  _codec1024.py      ★ 4th 코덱 디코더 (1024-링 LZSS)
-  _enc1024.py        ★ 4th 코덱 인코더
-  _lzss_enc.py       LZSS 인코더(ring/rel)
-  extract_native.py  / extract_battle.py    추출
-  build_native.py    시나리오 빌드 (대사 박스 3줄 수정 포함)
-  build_battle.py    전투 빌드
-  build_rom_all.py   전체 ROM 빌드 (시나리오+전투+arm9+크레딧+타이틀 주입)
-  _inject_arm9.py    / _inject_credits_fit.py 주입 (arm9 / 크레딧)
-  _redraw2.py        ★ 타이틀 로고 OBJ 스프라이트 한글 재작도 (2D 매핑)
-  _inject_title.py   / _inject_title3.py    타이틀 #2360 재인코딩·재주입
-  _export_png.py     / _import_png.py    로고 PNG 추출/주입 (직접 편집용, display-lossless)
-  _eyecatch_inject.py  ★ 챕터 아이캐치 59화 한글 주입 (add02 #2214~#2330, Malgun Gothic)
-  _inject_misc_images.py  ★ 저작권·반다이남코·저장오류 메시지 한글 주입 (add02 #1119~#2374)
-  _render_ko_eyecatch.py  아이캐치 주입 결과 미리보기 렌더 (add02_patched.bin → PNG)
-  _eyepreview.py     아이캐치를 실제 게임 폰트로 렌더 (데모)
-docs/images/         결과 스크린샷
-title_logo/          타이틀 로고 직접 편집용 PNG 캔버스 + 영역 가이드 (편집법 README 포함)
+SRWK/
+├─ srwk_work/            도구 일체 — 이 저장소만으로 전체 재빌드 가능
+│   ├─ rebuild_all.py        ★ 마스터 오케스트레이터 (모든 주입을 올바른 순서로)
+│   ├─ extract_roms.py       ★ ROM 2개 → jp/ , kr/ 로 풀기 (제일 먼저 실행)
+│   ├─ build_rom_all.py      최종 .nds 패킹 (시나리오·전투·arm9·크레딧·이미지)
+│   ├─ build_native.py       시나리오 빌드   / extract_native.py   추출
+│   ├─ build_battle.py       전투 대사 빌드  / extract_battle.py   추출
+│   ├─ export_data.py        작업 JSON → 공개용 한국어 전용 JSON
+│   ├─ restore_jp.py         본인 ROM에서 일본어 원문 복원 (번역 참고용)
+│   ├─ srwk_rom.py           ROM / add0X 아카이브 처리
+│   ├─ srwk_codec.py         KS X 1001 완성형 ↔ SJIS 매핑
+│   ├─ srwk_native.py        시나리오 코덱   / srwk_battle.py  전투 코덱
+│   ├─ _codec1024.py         ★ 자체 그래픽 코덱 디코더 (1024-링 LZSS)
+│   ├─ _enc1024.py / _enc1024b.py   ★ 인코더 (원본 크기 내 재압축)
+│   ├─ _plate_lib.py         플레이트 렌더 공통
+│   ├─ _eyecatch_inject.py   챕터 아이캐치 59화        _inject_misc_images.py  저작권·저장 화면
+│   ├─ _inject_captions.py   시간경과 캡션             _inject_spirit.py       정신기 51개
+│   ├─ _inject_battle_plates.py 전투 라벨 아틀라스     _inject_cmd1889.py      전투 커맨드
+│   ├─ _inject_userlogo.py   타이틀 로고               _fix_activation_widths.py 발동 이미지 폭
+│   ├─ _inject_plates.py     특수능력·상태이상 96개    _inject_titles.py       시리즈 타이틀 14개
+│   ├─ _inject_critical.py   크리티컬                  _inject_muteki.py       무적 컷인
+│   ├─ _inject_arm9.py       유닛명·시스템 메시지      _inject_font.py         갈무리11 대사 폰트
+│   ├─ _inject_credits_fit.py 스태프 크레딧 (길이 안전)
+│   ├─ Galmuri11.ttf         대사 폰트 (SIL OFL 1.1)
+│   ├─ assets/               타이틀 로고 캔버스, 타이틀 OAM, 전투 코덱 테이블, OFL 전문
+│   └─ analysis/             리버스 엔지니어링에 쓴 덤프·탐색 도구 (빌드에는 불필요)
+├─ data/                 번역 데이터 (한국어 전용) — 여기를 고치면 됩니다
+│   ├─ scenario_ko.json      시나리오 대사      ├─ battle_ko.json   전투 대사
+│   └─ credits_ko.json       스태프 크레딧      └─ README.md        편집 규칙
+├─ patch/                배포용 xdelta (버전별)
+├─ docs/
+│   ├─ PATCHING.md           ★ 일반 사용자용 적용 방법
+│   ├─ BUILD.md              ★ 직접 빌드하기 + 파일 포맷 레퍼런스
+│   └─ images/               결과 스크린샷
+├─ title_logo/           타이틀 로고 편집용 캔버스 + 영역 가이드
+└─ THIRD-PARTY-NOTICES.md 갈무리11 · 맑은 고딕 · YameSoft · 게임 데이터 고지
 ```
 
-## 사용법
+## 직접 빌드하기
 
-도구는 본인이 덤프한 ROM/바이너리를 기준으로 동작합니다 (저작권상 데이터는 미포함). 대략적인 흐름:
+**저장소 + 본인 ROM 2개**만 있으면 배포본과 **바이트 단위로 동일한** 결과가 나옵니다.
 
 ```bash
-pip install ndspy pillow numpy capstone     # 의존성
-# 1) 추출:  python extract_native.py   (add03 → JSON)
-# 2) 번역:  JSON의 ko 필드 편집
-# 3) 빌드:  python build_rom_all.py    → 패치된 .nds
+pip install -r requirements.txt
+python srwk_work/extract_roms.py          # ROM 2개 → jp/ , kr/
+python srwk_work/rebuild_all.py --verify  # 전체 재빌드 + CRC 검증
 ```
 
-`build_native.py`는 편집되지 않은 블록은 바이트 단위로 그대로 두고(회귀 안전), 편집된 블록만 코드북을 재생성·재인코딩한 뒤 디코드-백 자체 검증을 수행합니다.
+필요한 ROM은 ① 일본판 원본(CRC32 `D16DB8AF`)과 ② **YameSoft 한글패치가 적용된 ROM**입니다. 이 패치는 YameSoft 패치를 기반으로 미번역 부분을 채운 것이라 ②가 기준선이 됩니다. 둘 다 저장소에 없으니 직접 준비하세요.
+
+번역만 고치고 싶다면 `data/*.json`의 `ko` 필드를 고친 뒤 `python srwk_work/build_rom_all.py`만 돌려도 됩니다(이미지 재렌더링을 건너뛰어 훨씬 빠릅니다).
+
+자세한 내용 — 빌드 파이프라인 단계, 편집 규칙, 파일 포맷 레퍼런스 — 은 **[docs/BUILD.md](docs/BUILD.md)** 를 보세요.
+
+### 재현성 검증
+
+- `add02` · `add04` · `arm9` · `ovl_003` 네 바이너리를 원본 추출본에서 다시 만들어 배포본과 **바이트 단위 일치** 확인.
+- 한국어 전용 `data/*_ko.json`으로 빌드한 `add03dat.bin` / `add05dat.bin`이 일본어 원문을 포함한 작업 파일로 빌드한 것과 **바이트 단위 일치** 확인.
 
 ## 크레딧
 

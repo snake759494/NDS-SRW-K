@@ -2,12 +2,15 @@
 *.nds
 *.srl
 arm9.bin
+arm7.bin
+arm9ovt.bin
 add0*dat.bin
 ovl_*.bin
 overlay/
+overlays/
+jp/
 kr/
 build/
-data/
 
 # --- intermediate dumps / savestates ---
 *.dst
@@ -15,12 +18,19 @@ _sstate.bin
 _vram.bin
 _pal.bin
 *.sav
+*.ml0
+*.ml1
 
-# --- the full game script (jp+ko) is not redistributed here ---
+# --- working translation files: these carry the game's Japanese script and are
+#     NOT redistributed. The publishable Korean-only exports are data/*_ko.json
+#     (tools/export_data.py makes them; tools/restore_jp.py puts `jp` back from
+#     your own ROM). ---
 srwk_scenario_clean*.json
 srwk_battle*.json
 srwk_arm9_text.json
-_credits*.json
+_credits_tr.json
+_scenario_*.json
+_battle_*.json
 
 # --- python ---
 __pycache__/
@@ -28,7 +38,7 @@ __pycache__/
 .venv/
 venv/
 
-# --- generated renders (keep only docs/images) ---
+# --- generated renders (docs/images, assets/ and title_logo/ are kept) ---
 /_*.png
 _c1024_*.png
 _v8_*.png

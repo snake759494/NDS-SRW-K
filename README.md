@@ -18,18 +18,28 @@
 
 ## 패치 다운로드 & 적용 (Patch)
 
-완성된 한글 패치: **[`patch/SRWK-Korean-v1.17.xdelta`](patch/SRWK-Korean-v1.17.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
+완성된 한글 패치: **[`patch/SRWK-Korean-v1.18.xdelta`](patch/SRWK-Korean-v1.18.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
 
 > 📖 **적용 방법은 [docs/PATCHING.md](docs/PATCHING.md)** · 직접 빌드·번역 수정은 **[docs/BUILD.md](docs/BUILD.md)**
 
 1. xdelta 적용 도구(xdelta UI, Delta Patcher 등) 또는 명령줄:
    ```
-   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.17.xdelta "Super Robot Wars K (Korean).nds"
+   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.18.xdelta "Super Robot Wars K (Korean).nds"
    ```
 2. **기준 ROM** (본인이 합법적으로 덤프한 것):
    - `Super Robot Wars K (Japan).nds` — **67,108,864 바이트, CRC32 `D16DB8AF`**
 3. 결과 ROM:
-   - `Super Robot Wars K (Korean).nds` — **63,693,664 바이트, CRC32 `DBC931FF`**
+   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `A01F6796`**
+
+> ### **v1.18 — 시나리오 대사 전면 검수 반영**
+> 제보자(입지사지 님)가 시나리오 전편을 직접 검수한 결과를 반영했습니다. **대사 박스 6,096개**가 바뀌었습니다.
+>
+> - **이름 표기 통일** — 오토히메→츠바키, 소오시→소우시, 잇키→카즈키, 레무→렘, 류구→타츠미야, 드보르자크→드보르작, 탕그람→탱그램, 가즈무→가즘, 이딕스→이디크스, 르＝코볼→루 코볼 등. 옛 표기 잔류 **0건**.
+> - **한국식 표현으로 다듬기** — 직역투를 실제로 쓰는 말로 고치고, 읽기 편하게 줄바꿈을 조정했습니다. 폭 초과 줄이 4,746 → 4,654로 줄고 최대 폭도 368 → 228로 내려갔습니다.
+> - **특수문자 정리** — 자체 번역 챕터(ch25~)에서 `、`→`，` 506건, `。`→`．` 82건, `…．`→`…` 332건을 통일했습니다. (야메소프트 번역 구간 ch1~24는 원 스타일 유지)
+> - **조사·오타 수정** — 이름을 바꾸며 깨진 조사 13건(`렘는`→`렘은` 등), 편집 중 잘린 행이 남아 같은 말이 두 번 나오던 박스 1건, 띄어쓰기·공백 11건.
+>
+> 자세한 내역은 [이슈 #5](https://github.com/snake7594/NDS-SRW-K/issues/5)에 있습니다.
 
 > ### ⚠ **v1.17 — 엔딩 크레딧 멈춤 치명적 버그 수정 (필수 업데이트)**
 > 1회차 클리어 후 **엔딩 크레딧에서 글자가 깨지고 진행이 멈추던** 문제를 수정했습니다.

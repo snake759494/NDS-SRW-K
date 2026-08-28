@@ -18,18 +18,25 @@
 
 ## 패치 다운로드 & 적용 (Patch)
 
-완성된 한글 패치: **[`patch/SRWK-Korean-v1.18.xdelta`](patch/SRWK-Korean-v1.18.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
+완성된 한글 패치: **[`patch/SRWK-Korean-v1.19.xdelta`](patch/SRWK-Korean-v1.19.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
 
 > 📖 **적용 방법은 [docs/PATCHING.md](docs/PATCHING.md)** · 직접 빌드·번역 수정은 **[docs/BUILD.md](docs/BUILD.md)**
 
 1. xdelta 적용 도구(xdelta UI, Delta Patcher 등) 또는 명령줄:
    ```
-   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.18.xdelta "Super Robot Wars K (Korean).nds"
+   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.19.xdelta "Super Robot Wars K (Korean).nds"
    ```
 2. **기준 ROM** (본인이 합법적으로 덤프한 것):
    - `Super Robot Wars K (Japan).nds` — **67,108,864 바이트, CRC32 `D16DB8AF`**
 3. 결과 ROM:
-   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `A01F6796`**
+   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `157E3D43`**
+
+> ### **v1.19 — 전투 오타·오역 및 UI 제보 반영**
+> - **이슈 #2** — 제보 이미지와 v1.18 ROM의 arm9 문자열을 대조해 `バリア`가 `베리어`로 이미 반영된 상태임을 확인했습니다.
+> - **이슈 #3** — 솔 블리어스 렉스 합체 대사의 `Ft`/`Fu` 잔류 표기를 `미스트`/`안젤리카`로 수정했습니다.
+> - **이슈 #4** — 전투 특수능력 플레이트의 `양전자`/`리플렉터` 타일 분할을 실제 패턴에 맞춰 조정해 글자 잘림을 수정했습니다.
+> - **이슈 #6** — `네오오크서` 계열 오기를 `네오 옥서`로 통일했습니다.
+> - **이슈 #7** — `스테아드`를 `스테어드`로 통일했습니다.
 
 > ### **v1.18 — 시나리오 대사 전면 검수 반영**
 > 제보자(입지사지 님)가 시나리오 전편을 직접 검수한 결과를 반영했습니다. **대사 박스 6,096개**가 바뀌었습니다.

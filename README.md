@@ -18,18 +18,27 @@
 
 ## 패치 다운로드 & 적용 (Patch)
 
-완성된 한글 패치: **[`patch/SRWK-Korean-v1.20.xdelta`](patch/SRWK-Korean-v1.20.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
+완성된 한글 패치: **[`patch/SRWK-Korean-v1.21.xdelta`](patch/SRWK-Korean-v1.21.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
 
 > 📖 **적용 방법은 [docs/PATCHING.md](docs/PATCHING.md)** · 직접 빌드·번역 수정은 **[docs/BUILD.md](docs/BUILD.md)**
 
 1. xdelta 적용 도구(xdelta UI, Delta Patcher 등) 또는 명령줄:
    ```
-   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.20.xdelta "Super Robot Wars K (Korean).nds"
+   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.21.xdelta "Super Robot Wars K (Korean).nds"
    ```
 2. **기준 ROM** (본인이 합법적으로 덤프한 것):
    - `Super Robot Wars K (Japan).nds` — **67,108,864 바이트, CRC32 `D16DB8AF`**
 3. 결과 ROM:
-   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `B12B8013`**
+   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `9B6477BB`**
+
+> ### **v1.21 — 후반 전투·시나리오 잔여 오타 수정**
+> - **이슈 #12** — 솔 블리어스 렉스의 잔류 `Ft기`/`Ft!`를 `미스트기`/`미스트!`로 수정했습니다.
+> - **이슈 #13** — 렉스의 결전 대사를 자연스러운 한국어(`우린 어떻게 돼도 상관없어!`, `헛되이 하진 않겠어!`, `우리의 모든 걸 쏟아붓자!`)로 다듬었습니다.
+> - **이슈 #14** — `자마대왕국` 표기가 v1.20에서 이미 반영된 상태임을 재검증하고 v1.21 결과물에 유지했습니다.
+> - **이슈 #15** — 미스트 전투의 `Fu` 잔류 표기를 `안젤리카기`로, `Ft기`를 `미스트기`로 바로잡았습니다.
+> - **이슈 #16** — 지그 벙커 공격 구호 `지고쿠우우`/`빈타아아`를 `지옥!!`/`받아치기!!`로 번역했습니다.
+> - **이슈 #17** — `지구와 거의 틀리지 않고`를 `지구와 거의 다르지 않고`로 수정했습니다.
+> - **이슈 #18** — `벌서`를 `벌써`, `격투왕`을 원문 의미에 맞는 `격추왕`으로 수정했습니다.
 
 > ### **v1.20 — 2~3화 전투 대사 오타 수정**
 > - **이슈 #9** — `오쿠사`로 잘못 표기된 네오 옥서 관련 전투 대사를 `옥서`로 통일했습니다.

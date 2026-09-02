@@ -32,6 +32,8 @@ TR = {
     0x69564: '드로이드 병사',      # ドロイドヘイ (was 드루이드ヘイ — also Droid≠Druid)
     0x69f34: '베리니 병사',        # ヴェリニーヘイ (was 베리니ニーヘイ)
     0x6a564: '이스페일 병사',      # イスペイルヘイ (was 이스페이ルヘイ)
+    0x6a65c: '에어・엑시레',       # エア・エクシーレ
+    0x6cad8: '스투디움 빔',        # ストゥディウム・ビーム
     0x6ea20: '라이덴 512E1 섀도우',# ライデン５１２Ｅ１　シャドウ (was …シャドウ)
     0x94c1c: '데이터 로드가 완료되었습니다',
     0x94c40: '데이터를 읽지 못했습니다. 전원을 끄고 카드를 다시 꽂아 주세요',
@@ -52,6 +54,10 @@ def enc(s):
     for ch in s:
         if ch in HAN2CODE:
             out += struct.pack('>H', HAN2CODE[ch])
+        elif ch == '・':
+            # This punctuation remains in the untouched SJIS portion of the
+            # arm9 font table; keep the standard Japanese middle-dot glyph.
+            out += b'\x81\x45'
         elif ord(ch) < 0x80:
             out.append(ord(ch))
         else:

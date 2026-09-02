@@ -18,18 +18,24 @@
 
 ## 패치 다운로드 & 적용 (Patch)
 
-완성된 한글 패치: **[`patch/SRWK-Korean-v1.22.xdelta`](patch/SRWK-Korean-v1.22.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
+완성된 한글 패치: **[`patch/SRWK-Korean-v1.23.xdelta`](patch/SRWK-Korean-v1.23.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
 
 > 📖 **적용 방법은 [docs/PATCHING.md](docs/PATCHING.md)** · 직접 빌드·번역 수정은 **[docs/BUILD.md](docs/BUILD.md)**
 
 1. xdelta 적용 도구(xdelta UI, Delta Patcher 등) 또는 명령줄:
    ```
-   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.22.xdelta "Super Robot Wars K (Korean).nds"
+   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.23.xdelta "Super Robot Wars K (Korean).nds"
    ```
 2. **기준 ROM** (본인이 합법적으로 덤프한 것):
    - `Super Robot Wars K (Japan).nds` — **67,108,864 바이트, CRC32 `D16DB8AF`**
 3. 결과 ROM:
-   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `D3CEFEDE`**
+   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `5FCEBC9C`**
+
+> ### **v1.23 — 7화·솔 블리어스 렉스 전투 표기 수정**
+> - **이슈 #25·#29** — 7화 안젤리카 전투의 화면에 남아 있던 `Fu`/`Ft`를 `미스트`로 수정했습니다(제보 위치 3곳).
+> - **이슈 #26** — 무장명 `스트디움・빔`/`에어・에크시레`를 `스투디움 빔`/`에어・엑시레`로 통일하고, 전투 대사의 `에어 엑실레` 7곳을 `에어 · 엑시레`로 수정했습니다.
+> - **이슈 #27** — `스태너 모드`는 v1.22에서 이미 `스터너 모드`로 수정된 상태임을 재확인했습니다.
+> - **이슈 #28** — 전투 대사의 `러스트 허리케인` 4곳을 `루스트 허리케인`으로 수정했습니다.
 
 > ### **v1.22 — 5~6화 잔류 표기·오타 수정**
 > - **이슈 #19** — `마들러`/`스태너` 잔류 표기를 `머들러`/`스터너`로 통일했습니다(9곳).

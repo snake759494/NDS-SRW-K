@@ -47,14 +47,14 @@ python srwk_work/extract_roms.py      # ROM 2개 -> jp/ , kr/ 로 풀기
 python srwk_work/rebuild_all.py --verify
 ```
 
-끝입니다. `--verify`는 결과 ROM의 CRC32가 배포본과 같은지(`A75FE576`) 검사하고, 다르면 0이 아닌 값으로 종료합니다.
+끝입니다. `--verify`는 결과 ROM의 CRC32가 배포본과 같은지(`A73AE161`) 검사하고, 다르면 0이 아닌 값으로 종료합니다.
 
 결과물: `Super Robot Wars K (Korean)-NEW.nds` (저장소 최상위, 63,688,032 바이트)
 
 배포용 xdelta를 만들려면:
 
 ```bash
-python -c "import pyxdelta;pyxdelta.run('Super Robot Wars K (Japan).nds','Super Robot Wars K (Korean)-NEW.nds','patch/SRWK-Korean-v1.25.xdelta')"
+python -c "import pyxdelta;pyxdelta.run('Super Robot Wars K (Japan).nds','Super Robot Wars K (Korean)-NEW.nds','patch/SRWK-Korean-v1.26.xdelta')"
 ```
 
 ### 시간이 오래 걸립니다

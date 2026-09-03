@@ -18,18 +18,26 @@
 
 ## 패치 다운로드 & 적용 (Patch)
 
-완성된 한글 패치: **[`patch/SRWK-Korean-v1.25.xdelta`](patch/SRWK-Korean-v1.25.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
+완성된 한글 패치: **[`patch/SRWK-Korean-v1.26.xdelta`](patch/SRWK-Korean-v1.26.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
 
 > 📖 **적용 방법은 [docs/PATCHING.md](docs/PATCHING.md)** · 직접 빌드·번역 수정은 **[docs/BUILD.md](docs/BUILD.md)**
 
 1. xdelta 적용 도구(xdelta UI, Delta Patcher 등) 또는 명령줄:
    ```
-   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.25.xdelta "Super Robot Wars K (Korean).nds"
+   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.26.xdelta "Super Robot Wars K (Korean).nds"
    ```
 2. **기준 ROM** (본인이 합법적으로 덤프한 것):
    - `Super Robot Wars K (Japan).nds` — **67,108,864 바이트, CRC32 `D16DB8AF`**
 3. 결과 ROM:
-   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `A75FE576`**
+   - `Super Robot Wars K (Korean).nds` — **63,688,032 바이트, CRC32 `A73AE161`**
+
+> ### **v1.26 — #31~#39 9화 오타·표기 수정**
+> - **이슈 #31** — 원문 대조 결과 유닛 메뉴의 `절도`(`窃盗`)와 전투 데모의 `변조`(`変調`)는 서로 다른 능력명이므로 기존 표기를 유지했습니다.
+> - **이슈 #32·#33·#38·#39** — 9화 시나리오의 `돼지`→`되지`, `생황`→`생활`, `의미가 틀려`→`의미가 달라`, `싶지 않아가`→`싶지 않아서가`를 수정했습니다.
+> - **이슈 #34** — ARM9 무기명 `보르트파라이저`를 `볼트파라이저`로 수정했습니다.
+> - **이슈 #35** — `ゴオちん`의 오기 `고친` 25건을 `고찡`으로 정리했습니다.
+> - **이슈 #36** — 전투 대사의 `갈고리발톱` 19건을 시나리오와 같은 `갈고리손톱`으로 통일했습니다.
+> - **이슈 #37** — 안젤리카 대사의 `Fu`를 `안젤리카`로 수정했습니다.
 
 > ### **v1.25 — #30 대화 폰트 복구**
 > - **이슈 #30** — v1.23·v1.24 배포본에서 누락된 ARM9 폰트 주입을 복구해 Galmuri11 대화 폰트를 되살렸습니다.

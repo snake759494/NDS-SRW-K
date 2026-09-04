@@ -25,7 +25,7 @@ JP_ROM = os.path.join(ROOT, 'Super Robot Wars K (Japan).nds')
 KR_ROM = os.path.join(ROOT, 'Super Robot Wars K (Korean)-기존패치.nds')
 OUT_ROM = os.path.join(ROOT, 'Super Robot Wars K (Korean)-NEW.nds')
 
-EXPECT_CRC = 0xA73AE161          # v1.26 result ROM
+EXPECT_CRC = 0x0B53B619          # v1.27 result ROM
 JP_CRC     = 0xD16DB8AF          # required Japanese base ROM
 
 # ── stages ────────────────────────────────────────────────────────────────────
@@ -52,6 +52,9 @@ STAGES = [
         '_inject_arm9.py',           # names / system messages
         '_inject_font.py --write',   # Galmuri11 dialogue font          (v1.13/14)
     ]),
+    ('ovl_text', [('kr/overlays/ovl_004.bin', 'kr/overlays/ovl_004_patched.bin')], [
+        '_inject_ovl004.py',         # support-count label typo (#43)
+    ]),
     ('credits', [('kr/overlays/ovl_003.bin', 'kr/overlays/ovl_003_patched.bin')],
         ['_inject_credits_fit.py --write']),                                # v1.17
 ]
@@ -72,7 +75,8 @@ def crc32(path):
 
 STOCK = ('jp/data/add02dat.bin', 'jp/data/add04dat.bin',
          'kr/data/add02dat.bin', 'kr/data/add04dat.bin',
-         'kr/arm9.bin', 'kr/overlays/ovl_003.bin')
+         'kr/arm9.bin', 'kr/overlays/ovl_003.bin',
+         'kr/overlays/ovl_004.bin')
 
 
 def preflight(need_rom=True):

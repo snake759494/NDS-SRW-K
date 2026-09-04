@@ -19,7 +19,7 @@ OUT_ROM = os.path.join(ROOT, "Super Robot Wars K (Korean)-NEW.nds")
 
 # ── release version — UPDATE THIS on each version bump; written to the ROM banner
 #    title so the emulator's "ROM display name" matches the released patch. ──
-VERSION = "1.26"
+VERSION = "1.27"
 BANNER_TITLE = "슈퍼로봇대전K 버전 {ver}\n한글화 YameSoft + 부끄지"
 
 
@@ -89,6 +89,18 @@ def patch(out_path=OUT_ROM):
         struct.pack_into("<I", ot, 3 * 32 + 8, len(d))     # ramSize == original
         rom.rom.arm9OverlayTable = bytes(ot)
         print(f"  ovl_003 : injected credits ({len(d)} B, size unchanged)")
+    # ovl_004: patch the support-count label typo (see _inject_ovl004.py).
+    # Keep the overlay size and RAM-size table entry unchanged.
+    ovl4 = os.path.join(HERE, "kr", "overlays", "ovl_004_patched.bin")
+    if os.path.exists(ovl4):
+        d = open(ovl4, "rb").read()
+        assert len(d) == len(rom.rom.files[4]), \
+            f"ovl_004 size changed ({len(d)} vs {len(rom.rom.files[4])})"
+        rom.rom.files[4] = d
+        ot = bytearray(rom.rom.arm9OverlayTable)
+        struct.pack_into("<I", ot, 4 * 32 + 8, len(d))
+        rom.rom.arm9OverlayTable = bytes(ot)
+        print(f"  ovl_004 : injected support-count fix ({len(d)} B, size unchanged)")
     patch_banner(rom.rom, VERSION)
     rom.save(out_path)
     print(f"saved {out_path}")

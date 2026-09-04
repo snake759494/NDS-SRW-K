@@ -47,14 +47,14 @@ python srwk_work/extract_roms.py      # ROM 2개 -> jp/ , kr/ 로 풀기
 python srwk_work/rebuild_all.py --verify
 ```
 
-끝입니다. `--verify`는 결과 ROM의 CRC32가 배포본과 같은지(`A73AE161`) 검사하고, 다르면 0이 아닌 값으로 종료합니다.
+끝입니다. `--verify`는 결과 ROM의 CRC32가 배포본과 같은지(`0B53B619`) 검사하고, 다르면 0이 아닌 값으로 종료합니다.
 
 결과물: `Super Robot Wars K (Korean)-NEW.nds` (저장소 최상위, 63,688,032 바이트)
 
 배포용 xdelta를 만들려면:
 
 ```bash
-python -c "import pyxdelta;pyxdelta.run('Super Robot Wars K (Japan).nds','Super Robot Wars K (Korean)-NEW.nds','patch/SRWK-Korean-v1.26.xdelta')"
+python -c "import pyxdelta;pyxdelta.run('Super Robot Wars K (Japan).nds','Super Robot Wars K (Korean)-NEW.nds','patch/SRWK-Korean-v1.27.xdelta')"
 ```
 
 ### 시간이 오래 걸립니다
@@ -77,6 +77,7 @@ python srwk_work/rebuild_all.py --stage add04
 | `add04` | `kr/data/add04dat.bin` | `_inject_plates` → `_inject_titles` → `_inject_critical` → `_inject_muteki` |
 | `widths` | (위 두 결과) | `_fix_activation_widths` — add02·add04 **양쪽**을 건드리므로 반드시 마지막 |
 | `arm9` | `kr/arm9.bin` | `_inject_arm9` → `_inject_font` |
+| `ovl_text` | `kr/overlays/ovl_004.bin` | `_inject_ovl004` — 원호방어 횟수 표기 |
 | `credits` | `kr/overlays/ovl_003.bin` | `_inject_credits_fit` |
 | `rom` | `...기존패치.nds` | `build_rom_all` (시나리오·전투 텍스트를 빌드해 위 결과와 함께 주입) |
 

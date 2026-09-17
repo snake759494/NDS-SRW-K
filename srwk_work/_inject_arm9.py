@@ -18,27 +18,30 @@ ORIG_LEN = len(arm9)
 # offset -> Korean translation (canonical names from the scenario where available)
 TR = {
     0x67d48: '소드',              # ソード
-    0x683f8: '히이라기 후유코',   # 柊　冬子
-    0x68818: '히노 요우지',       # 日野　洋治  (scenario: 히노 요우지)
-    0x68890: '우즈키 미와',       # 卯月　美和  (scenario: 우즈키)
-    0x688c0: '유미 겐노스케',     # 弓　弦之助  (scenario: 유미/弓)
-    0x68938: '미도 류코',         # 身堂　竜子  (scenario: 미도)
-    0x68a04: '미조구치 쿄스케',   # 溝口　恭介  (scenario: 미조구치)
-    0x69124: 'DSSD 병사',         # ＤＳＳＤヘイ
-    0x69244: '시바 칸지로',       # 司馬　還次郎 (scenario: 시바)
+    0x683f8: '히이라기　후유코',   # 柊　冬子
+    0x68818: '히노　요우지',       # 日野　洋治  (scenario: 히노 요우지)
+    0x68890: '우즈키　미와',       # 卯月　美和  (scenario: 우즈키)
+    0x688c0: '유미　겐노스케',     # 弓　弦之助  (scenario: 유미/弓)
+    0x68938: '미도　류코',         # 身堂　竜子  (scenario: 미도)
+    0x68a04: '미조구치　쿄스케',   # 溝口　恭介  (scenario: 미조구치)
+    0x69124: 'ＤＳＳＤ　병사',         # ＤＳＳＤヘイ
+    0x69244: '시바　칸지로',       # 司馬　還次郎 (scenario: 시바)
     # enemy unit names YameSoft left partially in katakana (ヘイ=兵/soldier, シャドウ=Shadow)
-    0x68a70: '오브 병사',          # オーブヘイ  (was 오브　ヘイ)
-    0x68ddc: '자프트 병사',        # ザフトヘイ  (was 자프트ヘイ)
-    0x69204: '요미군 병사',        # ヨミグンペイ (was 요미군ンペイ)
-    0x69564: '드로이드 병사',      # ドロイドヘイ (was 드루이드ヘイ — also Droid≠Druid)
-    0x69eb4: '잭터 테일',          # ゼクターテイル
-    0x69f34: '베리니 병사',        # ヴェリニーヘイ (was 베리니ニーヘイ)
-    0x6a564: '이스페일 병사',      # イスペイルヘイ (was 이스페이ルヘイ)
+    0x68a70: '오브　병사',          # オーブヘイ  (was 오브　ヘイ)
+    0x68ddc: '자프트　병사',        # ザフトヘイ  (was 자프트ヘイ)
+    0x69204: '요미군　병사',        # ヨミグンペイ (was 요미군ンペイ)
+    0x69564: '드로이드　병사',      # ドロイドヘイ (was 드루이드ヘイ — also Droid≠Druid)
+    0x69eb4: '잭터　테일',          # ゼクターテイル
+    0x69f34: '베리니　병사',        # ヴェリニーヘイ (was 베리니ニーヘイ)
+    0x6a564: '이스페일　병사',      # イスペイルヘイ (was 이스페이ルヘイ)
+    0x69134: '블루　듀얼',         # ブルデュエル (was 브르듀엘)
+    0x6adf0: '다이버　샷',          # ダイバーショット (was 다이버　쇼트)
+    0x6b14c: '웜・샷',              # ワーム・ショット (was 웜・쇼트)
     0x6a6c0: '슬러스터랜스',        # スラスターランス
     0x6aae4: '볼트파라이저',        # ボルトパライザー
     0x6a65c: '에어・엑시레',       # エア・エクシーレ
-    0x6cad8: '스투디움 빔',        # ストゥディウム・ビーム
-    0x6ea20: '라이덴 512E1 섀도우',# ライデン５１２Ｅ１　シャドウ (was …シャドウ)
+    0x6cad8: '스투디움　빔',        # ストゥディウム・ビーム
+    0x6ea20: '라이덴　５１２Ｅ１　섀도우',# ライデン５１２Ｅ１　シャドウ (was …シャドウ)
     0x94c1c: '데이터 로드가 완료되었습니다',
     0x94c40: '데이터를 읽지 못했습니다. 전원을 끄고 카드를 다시 꽂아 주세요',
     0x94c88: '데이터가 손상되었습니다',
@@ -58,6 +61,12 @@ def enc(s):
     for ch in s:
         if ch in HAN2CODE:
             out += struct.pack('>H', HAN2CODE[ch])
+        elif ch in (' ', '　'):
+            # a 1-byte 0x20 inside the 2-byte string desyncs the renderer
+            # (issue #1: 잭터 테일 garbled) -- always use the full-width space
+            out += bytes([0x81, 0x40])
+        elif 0xFF01 <= ord(ch) <= 0xFF5E:
+            out += ch.encode('cp932')        # full-width alnum: untouched SJIS 0x82xx rows
         elif ch == '・':
             # This punctuation remains in the untouched SJIS portion of the
             # arm9 font table; keep the standard Japanese middle-dot glyph.

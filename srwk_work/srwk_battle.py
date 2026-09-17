@@ -388,7 +388,14 @@ def sanitize_ko_battle(text):
     through untouched. Returns (clean, substitutions)."""
     t = tables()
     out, subs = [], []
+    func = False
     for c in text:
+        if func:                      # the byte after 'Ｆ' IS the function id
+            out.append(c)             # (e.g. '|' is not a glyph -- never sanitise it)
+            func = False
+            continue
+        if c == "Ｆ":
+            func = True
         if c in (";", "Ｆ") or t.enc_char(c) is not None:
             out.append(c)
             continue

@@ -286,7 +286,15 @@ def decode_entry(data, n, korea=False):
         if v["anchor"] is not None and v["anchor"] not in anchor2vi:
             anchor2vi[v["anchor"]] = vi
     subptr_map = {}
-    for k in range(1, e.pointer_count):
+    # Records 1..PointerCount-1 are 24 bytes; right after them sits ONE more
+    # 8-byte record (index PointerCount, before the condition-list table that
+    # rec0 +2 points to) whose +6 is the offset of the entry's PU support-attack
+    # line. All 210 JP entries have it. Leaving it out kept the Japanese offset,
+    # so a re-encoded entry's support line was read mid-sentence with a garbage
+    # speaker byte -> Kira's face + a fragment (issues #1-#3, "키라 등장").
+    ext_off = struct.unpack_from("<h", header, 2)[0]
+    last = e.pointer_count if ext_off - 24 * e.pointer_count >= 8 else e.pointer_count - 1
+    for k in range(1, last + 1):
         val = struct.unpack_from("<h", header, 24 * k + 6)[0]
         if val in anchor2vi:
             subptr_map[k] = anchor2vi[val]

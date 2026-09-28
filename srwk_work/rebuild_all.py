@@ -25,7 +25,7 @@ JP_ROM = os.path.join(ROOT, 'Super Robot Wars K (Japan).nds')
 KR_ROM = os.path.join(ROOT, 'Super Robot Wars K (Korean)-기존패치.nds')
 OUT_ROM = os.path.join(ROOT, 'Super Robot Wars K (Korean)-NEW.nds')
 
-EXPECT_CRC = 0x0B53B619          # v1.27 result ROM
+EXPECT_CRC = 0xF61CC929          # v1.28 result ROM
 JP_CRC     = 0xD16DB8AF          # required Japanese base ROM
 
 # ── stages ────────────────────────────────────────────────────────────────────

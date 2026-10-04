@@ -71,6 +71,12 @@ def build(json_path=JSONF, base_path=None):
                 continue
             ko, _sb = sanitize_ko_battle(ko)  # punctuation/syllable fixups
             ko = wrap_battle(ko, MAX_LENGTH)  # keep each sub-line <= 176 wide
+            if ko.count(";") + 1 > 3:
+                # the battle box shows 3 lines; a 4th spills into a new voice
+                # line whose first bytes are read as a speaker -> Kira + garbage
+                # (issue #5, Brastol Tiger). JP never exceeds 3. Shorten the text.
+                raise RuntimeError(f"battle entry {n} vline {i}: {ko.count(';') + 1} "
+                                   f"sub-lines after wrapping (max 3): {ko}")
             miss = _missing_chars(ko)
             if miss:
                 # still un-encodable -> keep original bytes, report

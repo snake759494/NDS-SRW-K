@@ -41,6 +41,18 @@ TR = {
     0x69024: '야타노카가미',        # ヤタノカガミ (was 야타노가가미; plates say 야타노카가미)
     0x69fb4: '고트프리트',          # ゴットフリート (was 갓　프리트; dialogue says 고트프리트)
     0x6ddfc: '보와튀르・뤼미에르',   # ヴォワチュールリュミエール (French; was 버츄얼　류미엘)
+    0x6a304: '노른　시스템',          # ノルンシステム (was 노룬; plates say 노른)
+    0x6c9d0: '포톤　매트　배리어',    # フォトンマットバリア (was 포톤맛트　베리어)
+    0x7011c: '　포톤　매트　배리어　효과가　상승한다',  # its description
+    0x6a904: '엘도라　블록',          # エルドラブロック (was 엘도라　블럭; plates say 블록)
+    0x6db78: '엘도라　블록　슛',     # エルドラブロックシュート (was 엘도라 브로큰 슛 = mistranslation)
+    0x6afe4: '엘도라　아타케',        # エルドラアタッケ (Spanish ataque; was 엘도라　어텍)
+    0x6d210: '디아만테　크래시',      # ディアマンテクラッシュ (was 디　아만테　크래셔)
+    0x67ee0: '신의　번개',            # 神の雷 (was 신의뢰; dialogue says 신의 번개)
+    0x6b660: '대형　제네레이터',      # 大型ジェネレーター (unified spelling)
+    0x694d4: '사이킥　참',            # サイキック斬 (unified with dialogue)
+    0x65a38: '사이킥　참、그리고',     # サイキック斬、そして
+    0x6e760: '파이널　사이킥　웨이브', # ファイナルサイキックウェーブ
     0x6a6c0: '슬러스터랜스',        # スラスターランス
     0x6aae4: '볼트파라이저',        # ボルトパライザー
     0x6a65c: '에어・엑시레',       # エア・エクシーレ
@@ -71,6 +83,8 @@ def enc(s):
             out += bytes([0x81, 0x40])
         elif 0xFF01 <= ord(ch) <= 0xFF5E:
             out += ch.encode('cp932')        # full-width alnum: untouched SJIS 0x82xx rows
+        elif len(ch.encode('cp932', 'ignore')) == 2 and ch.encode('cp932')[0] == 0x81:
+            out += ch.encode('cp932')         # SJIS punctuation row 0x81 (、。！？ etc.), untouched by the KR font
         elif ch == '・':
             # This punctuation remains in the untouched SJIS portion of the
             # arm9 font table; keep the standard Japanese middle-dot glyph.

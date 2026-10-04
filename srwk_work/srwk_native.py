@@ -261,9 +261,19 @@ def regen_codebook(orig_cb, charlist, hangul):
     struct.pack_into("<i", cb, 0x2C, fs + 2 * n - 2)   # FontEnd
     return bytes(cb)
 
+# ①~⑩ are runtime name placeholders. Measuring them as one 8-px glyph let
+# reflow merge "④가" into a full line; once the game expanded it to a real name
+# the line overflowed the box and words vanished (issue #5, ch.27 "대사 누락").
+# Widths = the default names: 미스트 / 안젤리카 / 셸디아 / 레브리아스 / 세리우스 /
+# 세리우스Ⅱ / 솔브리아스・렉스 / 솔브리아스・레기나 / 미스트・렉스 / 세르케리우스.
+PLACEHOLDER_WIDTH = {"①": 36, "②": 48, "③": 36, "④": 60, "⑤": 48, "⑥": 56,
+                     "⑦": 92, "⑧": 104, "⑨": 68, "⑩": 72}
+
+
 def get_byte_count(s):
-    """GetByteCount: Korean syllable=12, everything else=8 width units."""
-    return sum(12 if ("가" <= c <= "힣") else 8 for c in s)
+    """GetByteCount: Korean syllable=12, everything else=8 width units;
+    a name placeholder counts as the width of the name it expands to."""
+    return sum(12 if ("가" <= c <= "힣") else PLACEHOLDER_WIDTH.get(c, 8) for c in s)
 
 
 def wrap_sublines(lines, limit=176):

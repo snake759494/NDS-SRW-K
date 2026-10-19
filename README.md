@@ -18,18 +18,21 @@
 
 ## 패치 다운로드 & 적용 (Patch)
 
-완성된 한글 패치: **[`patch/SRWK-Korean-v1.30.xdelta`](patch/SRWK-Korean-v1.30.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
+완성된 한글 패치: **[`patch/SRWK-Korean-v1.31.xdelta`](patch/SRWK-Korean-v1.31.xdelta)** (약 1.6 MB, xdelta3 / VCDIFF)
 
 > 📖 **적용 방법은 [docs/PATCHING.md](docs/PATCHING.md)** · 직접 빌드·번역 수정은 **[docs/BUILD.md](docs/BUILD.md)**
 
 1. xdelta 적용 도구(xdelta UI, Delta Patcher 등) 또는 명령줄:
    ```
-   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.30.xdelta "Super Robot Wars K (Korean).nds"
+   xdelta3 -d -s "Super Robot Wars K (Japan).nds" SRWK-Korean-v1.31.xdelta "Super Robot Wars K (Korean).nds"
    ```
 2. **기준 ROM** (본인이 합법적으로 덤프한 것):
    - `Super Robot Wars K (Japan).nds` — **67,108,864 바이트, CRC32 `D16DB8AF`**
 3. 결과 ROM:
-   - `Super Robot Wars K (Korean).nds` — **63,687,520 바이트, CRC32 `8CF3E67A`**
+   - `Super Robot Wars K (Korean).nds` — **63,687,520 바이트, CRC32 `37DD153B`**
+
+> ### **v1.31 — 십자키·LR 입력 시 커서가 왼쪽 끝으로 튀던 버그 수정 (#9)**
+> v1.30에서 공백 두 칸(`20 20`)을 전각 공백으로 일괄 교체할 때, 일본판에서도 원래 `20 20`이던 **코드·스크립트 명령 9곳**(ovl_004 4곳, ovl_018 1곳, ovl_036·038·039·044·048)까지 바뀌었습니다. ovl_018의 바뀐 곳은 화면 레지스터에 0x2000 비트를 세우는 ARM 명령이라 커서 표시가 흔들렸습니다. 일본판에 이미 `20 20`이 있는 자리는 건드리지 않도록 고쳐 9곳을 원래대로 되돌렸습니다. 번역 텍스트(크레딧·메뉴·저장 질문 등)의 수정은 그대로 유지됩니다.
 
 > ### **v1.30 — 엔딩 크레딧·빈 메뉴 글자 복구, 지도 능력 라벨 잘림 수정 + 28~36화 제보 반영 (#6 #7 #8)**
 > - **엔딩 스태프롤 글자 깨짐** — 크레딧은 글자를 2바이트씩 읽는데, 이름 사이 공백과 영문(`SR` 등)이 1바이트로 들어가 그 뒤 글자가 전부 한 칸씩 어긋났습니다(「킹 ■■ 주식회사」 = 킹 레코드). 공백·영문을 전각으로 바꿨고, 남아 있던 일본어 「エグゼクティブ・プロデュ」와 깨진 「東映アニメーション」도 번역했습니다.

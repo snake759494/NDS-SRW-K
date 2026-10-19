@@ -44,14 +44,14 @@ def jp_text_starts(jp):
             i += 1
     return out
 
-def fix_pairs(buf, off):
+def fix_pairs(buf, off, jp):
     """walk one string; replace 0x20 0x20 at a character boundary with 0x8140."""
     i = off; n = 0
     while i < len(buf) and buf[i] != 0:
         b = buf[i]
         if b >= 0x81:
             i += 2
-        elif b == 0x20 and i + 1 < len(buf) and buf[i+1] == 0x20:
+        elif b == 0x20 and i + 1 < len(buf) and buf[i+1] == 0x20 and jp[i:i+2] != b'  ':
             buf[i:i+2] = b'\x81\x40'; n += 1; i += 2
         else:
             i += 1
@@ -68,7 +68,7 @@ for jpf in sorted(glob.glob('jp/overlays/ovl_*.bin')):
     orig = bytes(kr); n = 0
     for off in sorted(jp_text_starts(jp)):
         if kr[off] >= 0x81 or kr[off] == 0x20:
-            n += fix_pairs(kr, off)
+            n += fix_pairs(kr, off, jp)
     for (o, off), ko in TEXT.items():
         if o != idx: continue
         b = enc(ko); end = off

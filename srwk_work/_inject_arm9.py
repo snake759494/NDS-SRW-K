@@ -197,7 +197,7 @@ def main():
                 k = i
                 while k < len(arm9) and arm9[k] != 0:
                     if arm9[k] >= 0x81: k += 2
-                    elif arm9[k] == 0x20 and arm9[k+1] == 0x20:
+                    elif arm9[k] == 0x20 and arm9[k+1] == 0x20 and jp9[k:k+2] != bytes([0x20, 0x20]):
                         arm9[k:k+2] = bytes([0x81, 0x40]); pairs += 1; k += 2
                     else: k += 1
             i = j + 1 if j > i else i + 1

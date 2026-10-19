@@ -53,6 +53,23 @@ TR = {
     0x694d4: '사이킥　참',            # サイキック斬 (unified with dialogue)
     0x65a38: '사이킥　참、그리고',     # サイキック斬、そして
     0x6e760: '파이널　사이킥　웨이브', # ファイナルサイキックウェーブ
+    0x6e0d4: '・데미지를　２０％경감한다',  # ・ダメージを２０％軽減する (was 「・데미지가 　Q０％경감한다」)
+    0x6cc88: '클로・스플리터',   # クロー・スプリッツァー (was 크로・스피리츠)
+    0x70598: '클로・스플리터（템페스트　모드）',   # クロー・スプリッツァー（テンペストモード）
+    0x6dde0: '어그레시브・그라인더',   # アグレッシブ・グラインダー (was 공격적인  그라인더)
+    0x6e5a0: '스티뮬런트・스피릿츠',   # スティミュラント・スピリッツ (was 스티뮤란트・스피리츠)
+    0x6ccd0: '딜라이트・팔크스',   # ディライト・ファルクス (was 디　라이트・팔크스)
+    0x6ca48: '티어・스트레이너',   # ティア・ストレーナー (was 티아・스트레나)
+    0x6f100: '티어・스트레이너・미라지',   # ティア・ストレーナー・ミラージュ
+    0x6a620: '피데스・레이',   # フィデース・レイ (was 피티스・레이)
+    0x6d4cc: '크리스탈・앰플렉스',   # クリスタル・アンプレクス (was 안프레크스)
+    0x6e5e0: '프란디움・디바이더',   # プランディウム・ディバイダー (was 프란디움・분할기)
+    0x6d61c: '크로스브리드・차지',   # クロスブリード・チャージ (was 챠지)
+    0x6a164: '제트　클로',   # ジェットクロー (claw; was 제트　크로)
+    0x6ba20: '엔젤　불릿',   # エンジェルバレット (was 엔젤　벌렛)
+    0x6db08: '오버　프리즈　불릿',   # オーバーフリーズバレット (was 오버  프리즈  바렛)
+    0x690f4: '셀레블레이드',   # セレブレイド (was 세레블레이드)
+    0x6a534: '셀레블레이더',   # セレブレイダー (was 세레블레이더)
     0x6a6c0: '슬러스터랜스',        # スラスターランス
     0x6aae4: '볼트파라이저',        # ボルトパライザー
     0x6a65c: '에어・엑시레',       # エア・エクシーレ
@@ -65,6 +82,11 @@ TR = {
     0x94cc8: '데이터 저장이 완료되었습니다',
     0x94cec: '데이터 저장에 실패했습니다',
     0x94d0c: '데이터를 기록하지 못했습니다. 전원을 끄고 카드를 다시 꽂아 주세요',
+}
+
+# new strings that do not replace anything in arm9 (pointed at from overlays)
+EXTRA = {
+    'kizuna_full': '인연',     # spirit 絆: full name (ovl_004 record; was 「반」)
 }
 
 # reclaim space: dev-only debug strings (never shown to players)
@@ -141,6 +163,47 @@ def main():
             repointed += 1
             log.write('REPOINT  0x%06x -> 0x%06x  (%d ptrs)  budget=%d use=%d  %s\n'
                       % (off, new_off, len(ptrs), budget, len(b) + 1, ko))
+
+    # standalone strings other injectors point at (they live in arm9 because the
+    # overlays cannot grow). Addresses -> kr/arm9_extra.json.
+    import json as _json
+    extra_addr = {}
+    for key, ko in EXTRA.items():
+        b = enc(ko)
+        assert len(b) + 1 <= recl_left, 'reclaim space exhausted for extra %s' % key
+        arm9[recl_off:recl_off + len(b)] = b
+        arm9[recl_off + len(b)] = 0
+        extra_addr[key] = BASE + recl_off
+        log.write('EXTRA    %s -> 0x%06x  %s' % (key, recl_off, ko) + chr(10))
+        recl_off += len(b) + 1; recl_left -= len(b) + 1
+    _json.dump(extra_addr, open('kr/arm9_extra.json', 'w'), indent=1)
+
+    # YameSoft wrote word breaks as TWO half-width spaces (0x20 0x20). The weapon
+    # list reads 2 bytes per glyph and blanks the whole name on the pair 0x2020
+    # (issue #8: 「고단나  트리플  드라이브」 showed an empty row). Replace each pair
+    # with the full-width space 0x8140 -- same length, nothing moves. Only strings
+    # that also start a JP text string at the same offset are touched.
+    jp9 = open('jp/arm9.bin', 'rb').read()
+    pairs = 0
+    i = 0x060000
+    while i < len(jp9):
+        if jp9[i] >= 0x81 and jp9[i-1] == 0:
+            j = jp9.find(bytes([0]), i)
+            try:
+                ok = j > i and len(jp9[i:j].decode('cp932')) >= 2
+            except UnicodeDecodeError:
+                ok = False
+            if ok and (arm9[i] >= 0x81 or arm9[i] == 0x20):
+                k = i
+                while k < len(arm9) and arm9[k] != 0:
+                    if arm9[k] >= 0x81: k += 2
+                    elif arm9[k] == 0x20 and arm9[k+1] == 0x20:
+                        arm9[k:k+2] = bytes([0x81, 0x40]); pairs += 1; k += 2
+                    else: k += 1
+            i = j + 1 if j > i else i + 1
+        else:
+            i += 1
+    log.write('double half-width spaces -> 0x8140: %d' % pairs + chr(10))
 
     # verify size unchanged
     assert len(arm9) == ORIG_LEN, 'arm9 size changed!'

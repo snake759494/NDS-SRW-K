@@ -42,10 +42,15 @@ base = bytearray(open(SRC, 'rb').read())
 ov = bytearray(base)
 
 def enc(s):
+    # The credit renderer reads STRICTLY 2 bytes per glyph. A 1-byte half-width
+    # space or letter shifts every following pair, so the next word comes out
+    # as noise (v1.17-v1.29: 「킹 ■■ 주식회사」 = 킹 레코드, 「SR」 = garbage).
+    # Spaces -> SJIS 0x8140, ASCII -> full-width, exactly like the JP original.
     out = bytearray()
     for ch in s:
         if ch in HAN2CODE:   out += struct.pack('>H', HAN2CODE[ch])
-        elif ord(ch) < 0x80: out.append(ord(ch))
+        elif ch == ' ':      out += bytes([0x81, 0x40])
+        elif 0x21 <= ord(ch) < 0x7f: out += chr(ord(ch) + 0xFEE0).encode('cp932')
         elif ch == '／':     out += b'\x81\x5e'
         elif ch == '（':     out += b'\x81\x69'
         elif ch == '）':     out += b'\x81\x6a'

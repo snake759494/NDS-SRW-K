@@ -38,5 +38,27 @@ def main():
     print(f"patched {OLD} -> {NEW} ({len(data)} bytes): {OUT}")
 
 
+OVL_BASE = 0x021E6700          # ovl_004 load address (shared window with ovl_003)
+KIZUNA_FULL_PTR = 0x36a20      # spirit 絆 record: +0 full name, +4 short name
+KIZUNA_SHORT = 0x350bc         # 1-glyph short-name slot (4 bytes)
+
+
+def kizuna():
+    """絆 was 「반」 (on-yomi of the kanji) in both names. The full name becomes
+    「인연」 (matches the battle line 「인연이 빛난다!」, issue #8); it lives in arm9
+    because ovl_004 has no free room. Short name -> 「인」 like 열(열혈), 집(집중)."""
+    import json, os
+    if not os.path.exists('kr/arm9_extra.json'):
+        print('  (kr/arm9_extra.json missing: run the arm9 stage first)'); return
+    addr = json.load(open('kr/arm9_extra.json'))['kizuna_full']
+    data = bytearray(open(OUT, 'rb').read())
+    assert struct.unpack_from('<I', data, KIZUNA_FULL_PTR)[0] == OVL_BASE + KIZUNA_SHORT
+    struct.pack_into('<I', data, KIZUNA_FULL_PTR, addr)
+    data[KIZUNA_SHORT:KIZUNA_SHORT + 2] = enc('인')
+    open(OUT, 'wb').write(data)
+    print(f'  spirit 絆: full name -> 0x{addr:08x} (인연), short -> 인')
+
+
 if __name__ == "__main__":
     main()
+    kizuna()
